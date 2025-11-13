@@ -7,9 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Marten" Version="8.15.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
         <PackageReference Include="WolverineFx" Version="5.2.0" />
         <PackageReference Include="WolverineFx.Http" Version="5.2.0" />
+        <PackageReference Include="WolverineFx.Marten" Version="5.2.0" />
         <PackageReference Include="WolverineFx.RabbitMQ" Version="5.2.0" />
     </ItemGroup>
 
