@@ -1,16 +1,16 @@
-﻿using Wolverine.Http;
+﻿using Wolverine;
+using Wolverine.Http;
 
 namespace WolverineTest.Orchestrator.Features;
 
 public class ForecastEndpoint
 {
     [WolverinePost("/forecast/random")]
-    public static (IResult, IEnumerable<StartForecast>) Random(int? numberOfForecasts)
+    public static (IResult, IEnumerable<DeliveryMessage<StartForecast>>) Random(int? numberOfForecasts)
     {
         var amount = numberOfForecasts ?? 10;
         var startForecasts = Enumerable.Range(0, amount)
-            .Select(_ => GetForecastType())
-            .Select(type => new StartForecast(type))
+            .Select(i => new StartForecast(GetForecastType()).DelayedFor(TimeSpan.FromSeconds(i * 5)))
             .ToList();
         return (Results.Ok(startForecasts), startForecasts);
     }
@@ -24,10 +24,13 @@ public class ForecastEndpoint
         };
     
     [WolverinePost("/forecast/deterministic")]
-    public static (IResult, IEnumerable<StartForecast>) Deterministic(int? numberOfForecasts)
+    public static (IResult, List<DeliveryMessage<StartForecast>>) Deterministic(int? numberOfForecasts)
     {
         var amount = numberOfForecasts ?? 10;
-        var startForecasts = ForecastTypes().Take(amount).Select(type => new StartForecast(type)).ToList();
+        var startForecasts = ForecastTypes()
+            .Take(amount)
+            .Select((type, i) => new StartForecast(type).DelayedFor(TimeSpan.FromSeconds(i * 5)))
+            .ToList();
         return (Results.Ok(startForecasts), startForecasts);
     }
 
