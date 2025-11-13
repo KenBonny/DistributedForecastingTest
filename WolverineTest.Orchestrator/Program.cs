@@ -1,13 +1,19 @@
+using JasperFx.Resources;
 using Wolverine;
 using Wolverine.Http;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Configuration.AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
 
 builder.Services.AddWolverine(options =>
     {
-        options.DurableScheduledMessagesLocalQueue.TelemetryEnabled(true);
+        options.ServiceName = "Orchestrator";
+        options.Services.AddResourceSetupOnStartup();
+        options.UseRabbitMqUsingNamedConnection("RabbitMQ").UseConventionalRouting();
     })
     .AddWolverineHttp();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
