@@ -6,48 +6,48 @@ namespace WolverineTest.Orchestrator.Features;
 public class ForecastEndpoint
 {
     [WolverinePost("/forecast/random")]
-    public static (IResult, IEnumerable<DeliveryMessage<StartForecast>>) Random(int? numberOfForecasts)
+    public static (IResult, OutgoingMessages) Random(int? numberOfForecasts)
     {
         var amount = numberOfForecasts ?? 10;
         var startForecasts = Enumerable.Range(0, amount)
-            .Select(i => new StartForecast(GetForecastType()).DelayedFor(TimeSpan.FromSeconds(i * 5)))
+            .Select(i => GetForecastType().DelayedFor(TimeSpan.FromSeconds(i * 5)))
             .ToList();
-        return (Results.Ok(startForecasts), startForecasts);
+        return (Results.Ok(startForecasts), new OutgoingMessages(startForecasts));
     }
 
-    private static ForecastType GetForecastType() =>
+    private static StartForecast GetForecastType() =>
         System.Random.Shared.Next(100) switch
         {
-            < 60 => ForecastType.Daily,
-            < 90 => ForecastType.Weekly,
-            _ => ForecastType.Monthly
+            < 60 => new StartDailyForecast(),
+            < 90 => new StartWeeklyForecast(),
+            _ => new StartMonthlyForecast()
         };
     
     [WolverinePost("/forecast/deterministic")]
-    public static (IResult, List<DeliveryMessage<StartForecast>>) Deterministic(int? numberOfForecasts)
+    public static (IResult, OutgoingMessages) Deterministic(int? numberOfForecasts)
     {
         var amount = numberOfForecasts ?? 10;
         var startForecasts = ForecastTypes()
             .Take(amount)
-            .Select((type, i) => new StartForecast(type).DelayedFor(TimeSpan.FromSeconds(i * 5)))
+            .Select((type, i) => type.DelayedFor(TimeSpan.FromSeconds(i * 5)))
             .ToList();
-        return (Results.Ok(startForecasts), startForecasts);
+        return (Results.Ok(startForecasts), new OutgoingMessages(startForecasts));
     }
 
-    private static IEnumerable<ForecastType> ForecastTypes()
+    private static IEnumerable<StartForecast> ForecastTypes()
     {
         while (true)
         {
-            yield return ForecastType.Weekly;
-            yield return ForecastType.Daily;
-            yield return ForecastType.Weekly;
-            yield return ForecastType.Daily;
-            yield return ForecastType.Daily;
-            yield return ForecastType.Daily;
-            yield return ForecastType.Monthly;
-            yield return ForecastType.Daily;
-            yield return ForecastType.Weekly;
-            yield return ForecastType.Daily;
+            yield return new StartWeeklyForecast();
+            yield return new StartDailyForecast();
+            yield return new StartWeeklyForecast();
+            yield return new StartDailyForecast();
+            yield return new StartDailyForecast();
+            yield return new StartDailyForecast();
+            yield return new StartMonthlyForecast();
+            yield return new StartDailyForecast();
+            yield return new StartWeeklyForecast();
+            yield return new StartDailyForecast();
         }
     }
 }
