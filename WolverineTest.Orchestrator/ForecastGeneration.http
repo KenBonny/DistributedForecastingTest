@@ -1,0 +1,9 @@
+﻿@localhost = http://localhost:5154
+
+### default values from endpoint
+POST {{localhost}}/forecast/random
+
+### actual value from endpoint
+POST {{localhost}}/forecast/random?numberOfForecasts=5
+
+###
