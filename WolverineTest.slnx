@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="External.LongRunningComputation/External.LongRunningComputation.csproj" />
   <Project Path="Shared/Shared.csproj" />
   <Project Path="WolverineTest.Orchestrator/WolverineTest.Orchestrator.csproj" />
   <Project Path="WolverineTest.Worker/WolverineTest.Worker.csproj" />
