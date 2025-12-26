@@ -11,12 +11,14 @@ if (id == -1) return;
 
 var builder = Host.CreateDefaultBuilder(args);
 
-builder.ConfigureServices(services =>
+builder.ConfigureServices((context, services) =>
 {
     services.AddWolverine(options =>
     {
         options.ServiceName = name ?? $"Worker {id}";
-        options.UseRabbitMqUsingNamedConnection("RabbitMQ").UseConventionalRouting();
+        options.UseRabbitMq(context.Configuration.GetConnectionString("RabbitMQ")!)
+            .UseConventionalRouting()
+            .AutoProvision();
     });
     services.AddSingleton(new ForecastIdentity(id, name ?? $"Worker {id}"));
 });
