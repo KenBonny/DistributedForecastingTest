@@ -15,7 +15,9 @@ builder.Services.AddWolverine(options =>
     {
         options.ServiceName = "Orchestrator";
         options.Services.AddResourceSetupOnStartup();
-        options.UseRabbitMqUsingNamedConnection("RabbitMQ").UseConventionalRouting();
+        options.UseRabbitMq(builder.Configuration.GetConnectionString("RabbitMQ")!)
+            .UseConventionalRouting()
+            .AutoProvision();
     })
     .AddWolverineHttp()
     .AddMarten(options =>
@@ -23,8 +25,7 @@ builder.Services.AddWolverine(options =>
         options.Connection(builder.Configuration.GetConnectionString("Postgres")!);
         options.DatabaseSchemaName = "orchestration";
     })
-    .IntegrateWithWolverine()
-    .UseNpgsqlDataSource();
+    .IntegrateWithWolverine();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi().AddAuthorization();
 

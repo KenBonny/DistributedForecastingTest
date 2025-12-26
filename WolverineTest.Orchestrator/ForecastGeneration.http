@@ -1,4 +1,4 @@
-﻿@localhost = http://localhost:5154
+﻿@localhost = https://localhost:5154
 
 ### start random forecasts
 POST {{localhost}}/forecast/random
