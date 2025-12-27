@@ -13,8 +13,9 @@ public class MonthlyForecastHandler
         var now = DateTimeOffset.Now;
         var stopwatch = Stopwatch.StartNew();
 
-        // Simulate work
-        await Task.Delay(request.Duration);
+        // do work
+        using var forecasting = Process.Start(forecastEngine.Value.FullName, [request.Duration.ToString()]);
+        await forecasting.WaitForExitAsync();
 
         stopwatch.Stop();
         return new MonthlyForecastResponse(
