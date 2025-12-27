@@ -15,7 +15,9 @@ builder.ConfigureServices((context, services) =>
 {
     services.AddWolverine(options =>
     {
-        options.ServiceName = name ?? $"Worker {id}";
+        options.ServiceName = workerName.Replace(' ', '-');
+        options.Services.AddResourceSetupOnStartup();
+        options.Policies.DisableConventionalLocalRouting();
         options.UseRabbitMq(context.Configuration.GetConnectionString("RabbitMQ")!)
             .UseConventionalRouting()
             .AutoProvision();
