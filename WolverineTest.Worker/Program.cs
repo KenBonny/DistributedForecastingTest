@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using JasperFx.Core;
+using JasperFx.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +11,13 @@ var (id, name) = ParseArgs(args);
 if (id == -1) return;
 
 var builder = Host.CreateDefaultBuilder(args);
+
+var workerName = name ?? $"Worker {id}";
+builder.ConfigureAppConfiguration((_, config) =>
+{
+    config.AddInMemoryCollection(
+        new Dictionary<string, string> { ["Worker:Id"] = id.ToString(), ["Worker:Name"] = workerName }!);
+});
 
 builder.ConfigureServices((context, services) =>
 {
@@ -22,7 +30,9 @@ builder.ConfigureServices((context, services) =>
             .UseConventionalRouting()
             .AutoProvision();
     });
-    services.AddSingleton(new ForecastIdentity(id, name ?? $"Worker {id}"));
+    services.Configure<WorkerIdentity>(context.Configuration.GetSection("Worker"));
+    services.Configure<ForecastingEngine>(engine =>
+        engine.Path = new FileInfo(context.Configuration.GetValue<string>("ForecastingEngine")));
 });
 
 var app = builder.Build();
@@ -47,4 +57,13 @@ await app.RunAsync();
     return (-1, "Unknown");
 }
 
-public record ForecastIdentity(int Id, string Name);
+public record WorkerIdentity
+{
+    public required int Id { get; init; }
+    public required string Name { get; init; }
+}
+
+public record ForecastingEngine
+{
+    public required FileInfo Path { get; set; }
+}
