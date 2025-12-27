@@ -10,8 +10,9 @@ public class MonthlyForecastGeneration : Saga
 
     public static (MonthlyForecastGeneration, IEnumerable<MonthlyForecastRequest>) Start(StartMonthlyForecast start)
     {
-        var messages = Enumerable.Range(1, 30).Select(day => new MonthlyForecastRequest(day, 60.Seconds()));
-        return (new MonthlyForecastGeneration { Id = Guid.CreateVersion7() }, messages);
+        var id = Guid.CreateVersion7();
+        var messages = Enumerable.Range(1, 30).Select(day => new MonthlyForecastRequest(id, day, 60.Seconds()));
+        return (new MonthlyForecastGeneration { Id = id }, messages);
     }
     
     public void Handle(MonthlyForecastResponse response)

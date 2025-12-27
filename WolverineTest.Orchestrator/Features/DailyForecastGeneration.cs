@@ -10,9 +10,9 @@ public class DailyForecastGeneration : Saga
 
     public static (DailyForecastGeneration, IEnumerable<DailyForecastRequest>) Start(StartDailyForecast start)
     {
-        var messages = Enumerable.Range(0, 24).Select(hour => new DailyForecastRequest(hour, 10.Seconds()));
-
-        return (new DailyForecastGeneration { Id = Guid.CreateVersion7() }, messages);
+        var id = Guid.CreateVersion7();
+        var messages = Enumerable.Range(0, 24).Select(hour => new DailyForecastRequest(id, hour, 10.Seconds()));
+        return (new DailyForecastGeneration { Id = id }, messages);
     }
     
     public void Handle(DailyForecastResponse response)

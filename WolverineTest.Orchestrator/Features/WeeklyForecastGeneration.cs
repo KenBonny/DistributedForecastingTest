@@ -10,8 +10,9 @@ public class WeeklyForecastGeneration : Saga
 
     public static (WeeklyForecastGeneration, IEnumerable<WeeklyForecastRequest>) Start(StartWeeklyForecast start)
     {
-        var messages = Enum.GetValues<DayOfWeek>().Select(day => new WeeklyForecastRequest(day, 25.Seconds()));
-        return (new WeeklyForecastGeneration { Id = Guid.CreateVersion7() }, messages);
+        var id = Guid.CreateVersion7();
+        var messages = Enum.GetValues<DayOfWeek>().Select(day => new WeeklyForecastRequest(id, day, 25.Seconds()));
+        return (new WeeklyForecastGeneration { Id = id }, messages);
     }
     
     public void Handle(WeeklyForecastResponse response)

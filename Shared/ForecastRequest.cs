@@ -1,6 +1,6 @@
 ﻿namespace Shared;
 
-public record DailyForecastRequest(int Hour, TimeSpan Duration);
+public record DailyForecastRequest(Guid Id, int Hour, TimeSpan Duration);
 
 public record DailyForecastResponse(
     int Hour,
@@ -10,7 +10,7 @@ public record DailyForecastResponse(
     TimeSpan ActualDuration
 );
 
-public record WeeklyForecastRequest(DayOfWeek Day, TimeSpan Duration);
+public record WeeklyForecastRequest(Guid Id, DayOfWeek Day, TimeSpan Duration);
 
 public record WeeklyForecastResponse(
     DayOfWeek Day,
@@ -20,7 +20,7 @@ public record WeeklyForecastResponse(
     TimeSpan ActualDuration
 );
 
-public record MonthlyForecastRequest(int Day, TimeSpan Duration);
+public record MonthlyForecastRequest(Guid Id, int Day, TimeSpan Duration);
 
 public record MonthlyForecastResponse(
     int Day,
