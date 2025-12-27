@@ -1,3 +1,4 @@
+using JasperFx;
 using JasperFx.Resources;
 using Marten;
 using Wolverine;
@@ -18,12 +19,14 @@ builder.Services.AddWolverine(options =>
         options.UseRabbitMq(builder.Configuration.GetConnectionString("RabbitMQ")!)
             .UseConventionalRouting()
             .AutoProvision();
+        options.Policies.DisableConventionalLocalRouting();
     })
     .AddWolverineHttp()
     .AddMarten(options =>
     {
         options.Connection(builder.Configuration.GetConnectionString("Postgres")!);
         options.DatabaseSchemaName = "orchestration";
+        options.AutoCreateSchemaObjects = AutoCreate.All;
     })
     .IntegrateWithWolverine();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
