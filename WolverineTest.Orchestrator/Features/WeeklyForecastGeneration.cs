@@ -6,7 +6,7 @@ namespace WolverineTest.Orchestrator.Features;
 
 public class WeeklyForecastGeneration : Saga
 {
-    public Guid? Id { get; init; }
+    public Guid Id { get; init; }
 
     public static (WeeklyForecastGeneration, IEnumerable<WeeklyForecastRequest>) Start(StartWeeklyForecast start)
     {
