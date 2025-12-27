@@ -3,7 +3,7 @@ using Shared;
 
 namespace WolverineTest.Worker.Features;
 
-public class MonthlyForecast
+public class MonthlyForecastHandler
 {
     public static async Task<MonthlyForecastResponse> Handle(MonthlyForecastRequest request, ForecastIdentity identity)
     {
