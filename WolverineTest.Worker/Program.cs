@@ -28,7 +28,8 @@ builder.ConfigureServices((context, services) =>
         options.Policies.DisableConventionalLocalRouting();
         options.UseRabbitMq(context.Configuration.GetConnectionString("RabbitMQ")!)
             .UseConventionalRouting()
-            .AutoProvision();
+            .AutoProvision()
+            .ConfigureListeners(listener => listener.MaximumParallelMessages(1));
     });
     services.Configure<WorkerIdentity>(context.Configuration.GetSection("Worker"));
     services.Configure<ForecastingEngine>(engine =>
