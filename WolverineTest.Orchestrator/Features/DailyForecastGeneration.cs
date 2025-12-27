@@ -6,7 +6,15 @@ namespace WolverineTest.Orchestrator.Features;
 
 public class DailyForecastGeneration : Saga
 {
+    private const int TotalHours = 24;
     public Guid Id { get; init; }
+    private readonly List<DailyForecastResponse> _responses = new();
+
+    public IReadOnlyCollection<DailyForecastResponse> Responses
+    {
+        get => _responses;
+        init => _responses.AddRange(value);
+    }
 
     public static (DailyForecastGeneration, IEnumerable<DailyForecastRequest>) Start(StartDailyForecast start)
     {
@@ -17,6 +25,14 @@ public class DailyForecastGeneration : Saga
     
     public void Handle(DailyForecastResponse response)
     {
+        if (_responses.Contains(
+            response,
+            EqualityComparer<DailyForecastResponse>.Create((left, right) => left?.Hour == right?.Hour)))
+            return;
+
+        _responses.Add(response);
         
+        if (Responses.Count == TotalHours)
+            MarkCompleted();
     }
 }
