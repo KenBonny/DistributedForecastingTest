@@ -20,6 +20,7 @@ public class WeeklyForecastHandler
 
         stopwatch.Stop();
         return new WeeklyForecastResponse(
+            request.Id,
             request.Day,
             identity.Value.Id,
             identity.Value.Name,

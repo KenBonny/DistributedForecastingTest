@@ -20,6 +20,7 @@ public class DailyForecastHandler
 
         stopwatch.Stop();
         return new DailyForecastResponse(
+            request.Id,
             request.Hour,
             identity.Value.Id,
             identity.Value.Name,

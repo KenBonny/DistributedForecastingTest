@@ -19,6 +19,7 @@ public class MonthlyForecastHandler
 
         stopwatch.Stop();
         return new MonthlyForecastResponse(
+            request.Id,
             request.Day,
             identity.Value.Id,
             identity.Value.Name,
