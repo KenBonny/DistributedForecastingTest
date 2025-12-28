@@ -9,13 +9,13 @@ public class DailyForecastHandler
     public static async Task<DailyForecastResponse> Handle(
         DailyForecastRequest request,
         IOptions<WorkerIdentity> identity,
-        IOptions<FileInfo> forecastEngine)
+        IOptions<ForecastingEngine> forecastEngine)
     {
         var now = DateTimeOffset.Now;
         var stopwatch = Stopwatch.StartNew();
 
         // do work
-        using var forecasting = Process.Start(forecastEngine.Value.FullName, [request.Duration.ToString()]);
+        using var forecasting = Process.Start(forecastEngine.Value.Path.FullName, [request.Duration.ToString()]);
         await forecasting.WaitForExitAsync();
 
         stopwatch.Stop();
