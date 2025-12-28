@@ -28,6 +28,7 @@ builder.Services.AddWolverine(options =>
         options.DatabaseSchemaName = "orchestration";
         options.AutoCreateSchemaObjects = AutoCreate.All;
     })
+    .UseLightweightSessions()
     .IntegrateWithWolverine();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi().AddAuthorization();
